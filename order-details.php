@@ -37,7 +37,7 @@ function custom_shop_order_column($columns)
         .order-details-cover {
             position:relative;
             display: flex;
-            width: 95% !important;
+            width: 97% !important;
             background-color: #f3f3f3;
             margin-bottom: 4px;
         }
