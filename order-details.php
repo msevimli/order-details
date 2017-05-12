@@ -11,9 +11,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
-
 add_filter( 'manage_edit-shop_order_columns', 'custom_shop_order_column',11);
-
 function custom_shop_order_column($columns)
 {
     ?>
@@ -78,16 +76,13 @@ function custom_shop_order_column($columns)
     $columns['order-column1'] = __( 'Details','theme_slug');
     return $columns;
 }
-
 // adding the data for each orders by column (example)
 add_action( 'manage_shop_order_posts_custom_column' , 'custom_orders_list_column_content', 10, 20 );
 function custom_orders_list_column_content( $column )
 {
     global $post, $woocommerce, $the_order;
     $order = new WC_Order($post->ID);
-
 //to escape # from order id
-
     $order_id = trim(str_replace('#', '', $order->get_order_number()));
     //custom_order_option_cb($order_id);
     $order = new WC_Order( $order_id );
@@ -115,25 +110,30 @@ function custom_orders_list_column_content( $column )
                 </div>
                 <div class="content">
                     <?php
-                       $i=0;
-                       while($i<count($product_name)) {
-                          echo '<div class="order-details-cover">';
-                          echo '<div class="order-details-inline"><img width="50px" src="'.getImage($product_id[$i]).'"></div>';
-                          echo '<div class="order-details-inline qntInline">'.$product_qnt[$i].'x</div>';
-                          echo '<div class="order-details-inline nameInline">'.$product_name[$i].'</div>';
-                          if($product_parent[$i]) {
-                              echo '<div class="order-details-inline">'.$product_parent[$i].'</div>';
-                          }
-                          echo '</div>';
-                          $i++;
-                       }
+                    $i=0;
+                    while($i<count($product_name)) {
+                        echo '<div class="order-details-cover">';
+                        echo '<div class="order-details-inline"><img width="50px" src="'.getImageOrderDetails($product_id[$i]).'"></div>';
+                        echo '<div class="order-details-inline qntInline">'.$product_qnt[$i].'x</div>';
+                        echo '<div class="order-details-inline nameInline">'.$product_name[$i].'</div>';
+                        if($product_parent[$i]) {
+                            echo '<div class="order-details-inline">'.$product_parent[$i].'</div>';
+                        }
+                        echo '</div>';
+                        $i++;
+                    }
                     ?>
                 </div>
             </div>
             <?php
-         break;
+            break;
     }
 }
-function getImage($id) {
-  return  wp_get_attachment_image_src( get_post_thumbnail_id( $id ), 'single-post-thumbnail' )[0];
+function getImageOrderDetails($id) {
+    if(wp_get_attachment_image_src( get_post_thumbnail_id( $id ), 'single-post-thumbnail' )[0]) {
+        return  wp_get_attachment_image_src( get_post_thumbnail_id( $id ), 'single-post-thumbnail' )[0];
+    }
+    else {
+        return null;
+    }
 }
