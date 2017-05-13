@@ -38,8 +38,11 @@ function custom_shop_order_column($columns)
             position:relative;
             display: flex;
             width: 97% !important;
-            background-color: #f3f3f3;
             margin-bottom: 4px;
+            border-top-style: solid;
+            border-width: 1px;
+            border-color: #e0e0e0;
+            border-bottom-style: solid;
         }
         .order-details-inline {
             width: 30% !important;%;
@@ -51,6 +54,17 @@ function custom_shop_order_column($columns)
         }
         .nameInline {
             width: 47% !important;
+            margin-right:5px;
+            padding-top: 5px;
+        }
+        .parentItem {
+            width: 60% !important;
+        }
+        .orderDetailsImgCover {
+            width: 50px !important;
+            height: 50px !important;
+            overflow-x: hidden;
+            overflow-y: hidden;
         }
     </style>
     <script>
@@ -112,11 +126,11 @@ function custom_orders_list_column_content( $column )
                     $i=0;
                     while($i<count($product_name)) {
                         echo '<div class="order-details-cover">';
-                        echo '<div class="order-details-inline"><img width="50px" src="'.getImageOrderDetails($product_id[$i]).'"></div>';
+                        echo '<div class="order-details-inline"><div class="orderDetailsImgCover"><img width="50px" src="'.getImageOrderDetails($product_id[$i]).'"></div></div>';
                         echo '<div class="order-details-inline qntInline">'.$product_qnt[$i].'x</div>';
                         echo '<div class="order-details-inline nameInline">'.$product_name[$i].'</div>';
                         if($product_parent[$i]) {
-                            echo '<div class="order-details-inline">'.$product_parent[$i].'</div>';
+                            echo '<div class="order-details-inline parentItem">'.$product_parent[$i].'</div>';
                         }
                         echo '</div>';
                         $i++;
