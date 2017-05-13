@@ -52,13 +52,6 @@ function custom_shop_order_column($columns)
         .nameInline {
             width: 47% !important;
         }
-        .xx:after {
-            content: "\f095";
-            font-family: FontAwesome;
-            position: absolute;
-            margin-right:5px;
-            margin-top:1px;
-        }
     </style>
     <script>
         jQuery(document).ready(function($){
