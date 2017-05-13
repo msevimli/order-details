@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Order Item Details
+ * Plugin Name: Woocommerce Order Item Shower
  * Plugin URI: http://plife.se
  * Description: It shows order items on order page after woocommerce 3.0.x update
- * Version: 1.0
+ * Version: 1.1
  * Author: Deniz
  * Author URI: http://plife.se
  * License: GPL2
@@ -11,149 +11,23 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
+include_once( plugin_dir_path( __FILE__ ) . 'inc/wc-order-details.php');
+
+add_action( 'admin_enqueue_scripts', 'orderItemShowerLoadFiles' );
 add_filter( 'manage_edit-shop_order_columns', 'custom_shop_order_column',11);
-function custom_shop_order_column($columns)
-{
-    ?>
-    <style>
-        .container {
-            width:90%;
-            border:1px solid #d3d3d3;
-        }
-        .container div {
-            width:100%;
-            text-align: center;
-        }
-        .container .header {
-            background-color:#d3d3d3;
-            padding: 2px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .container .content {
-            display: none;
-            padding : 5px;
-        }
-        .order-details-cover {
-            position:relative;
-            display: flex;
-            width: 97% !important;
-            margin-bottom: 4px;
-            border-top-style: solid;
-            border-width: 1px;
-            border-color: #e0e0e0;
-            border-bottom-style: solid;
-        }
-        .order-details-inline {
-            width: 30% !important;%;
-            margin-bottom: 5px;
-            margin-left: 5px;
-        }
-        .qntInline{
-            margin-top: 15px;
-            width: 14% !important;
-            font-weight: 600;
-        }
-        .nameInline {
-            width: 100% !important;
-            margin-right:5px;
-            padding-top: 15px;
-        }
-        .parentItem {
-            width: 100% !important;
-            margin-top: 15px;
-        }
-        .orderDetailsImgCover {
-            width: 50px !important;
-            height: 50px !important;
-            overflow-x: hidden;
-            overflow-y: hidden;
-            margin-top: 5px;
-        }
-        .orderImg {
-            width: 50px!important;
-        }
-    </style>
-    <script>
-        jQuery(document).ready(function($){
-            $(".header").click(function () {
-                $header = $(this);
-                //getting the next element
-                $content = $header.next();
-                //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
-                $content.slideToggle(100, function () {
-                    //execute this after slideToggle is done
-                    //change text of header based on visibility of content div
-                    $header.text(function () {
-                        //change text based on condition
-                         return $content.is(":visible") ? "Collapse" : "Expand ( "+$header.attr('data')+' )';
-                    });
-                });
-            })
-        })
-    </script>
-    <?php
-    //add columns
-    $columns['order-column1'] = __( 'Details','theme_slug');
-    return $columns;
+add_action( 'manage_shop_order_posts_custom_column' , 'setDetails', 10, 20 );
+
+function custom_shop_order_column($columns) {
+     $columns['order-column1'] = __( 'Details','theme_slug');
+     return $columns;
 }
-// adding the data for each orders by column (example)
-add_action( 'manage_shop_order_posts_custom_column' , 'custom_orders_list_column_content', 10, 20 );
-function custom_orders_list_column_content( $column )
-{
-    global $post, $woocommerce, $the_order;
-    $order = new WC_Order($post->ID);
-//to escape # from order id
-    $order_id = trim(str_replace('#', '', $order->get_order_number()));
-    //custom_order_option_cb($order_id);
-    $order = new WC_Order( $order_id );
-    $items = $order->get_items();
-    $product_id=array();
-    $product_name=array();
-    $product_qnt=array();
-    $product_parent=array();
-    foreach ( $items as $item ) {
-        $product_name[] = $item['name'];
-        $product_id[] = $item['product_id'];
-        $product_qnt[]=$item['qty'];
-        if ( $meta_data = $item->get_formatted_meta_data( '' ) ) {
-            foreach ( $meta_data as $meta_id => $meta ) {
-                $product_parent[]=wp_kses_post( force_balance_tags( $meta->display_value ) );
-            }
-        }
-    }
-    switch ( $column )
-    {
-        case 'order-column1' :
-            ?>
-            <div class="container">
-                <div class="header" data="<?php echo array_sum($product_qnt); ?>"><span>Expand <span class="qntOrder">( <?php echo array_sum($product_qnt); ?> )</span></span></div>
-                <div class="content">
-                    <?php
-                    $i=0;
-                    while($i<count($product_name)) {
-                        echo '<div class="order-details-cover">';
-                        echo '<div class="order-details-inline orderImg"><div class="orderDetailsImgCover"><img width="50px" src="'.getImageOrderDetails($product_id[$i]).'"></div></div>';
-                        echo '<div class="order-details-inline qntInline">'.$product_qnt[$i].'x</div>';
-                        echo '<div class="order-details-inline nameInline">'.$product_name[$i].'</div>';
-                        if($product_parent[$i]) {
-                            echo '<div class="order-details-inline parentItem">'.$product_parent[$i].'</div>';
-                        }
-                        echo '</div>';
-                        $i++;
-                    }
-                    ?>
-                </div>
-            </div>
-            <?php
-            break;
-    }
+function setDetails ($columns) {
+     $orderItemShower=new wcOrderItemShowerClass();
+     $orderItemShower->custom_orders_list_column_content($columns);
 }
-function getImageOrderDetails($id) {
-    if(wp_get_attachment_image_src( get_post_thumbnail_id( $id ), 'single-post-thumbnail' )[0]) {
-        return  wp_get_attachment_image_src( get_post_thumbnail_id( $id ), 'single-post-thumbnail' )[0];
-    }
-    else {
-        return null;
-    }
+function orderItemShowerLoadFiles() {
+     wp_register_script( 'orderItemShowerJs', plugins_url('js/jslib.js', __FILE__), array('jquery'));
+     wp_enqueue_script( 'orderItemShowerJs' );
+     wp_register_style( 'orderItemShowerCss', plugins_url('css/style.css',__FILE__) );
+     wp_enqueue_style( 'orderItemShowerCss' );
 }
