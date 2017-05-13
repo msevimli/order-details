@@ -1,5 +1,6 @@
 <?php
 class wcOrderItemShowerClass {
+
   public function __construct() {
    	return;       
   }
@@ -14,14 +15,14 @@ class wcOrderItemShowerClass {
       $product_qnt=array();
       $product_parent=array();
       foreach ( $items as $item ) {
-      	 $product_name[] = $item['name'];
-       	 $product_id[] = $item['product_id'];
-       	 $product_qnt[]=$item['qty'];
-       	 if ( $meta_data = $item->get_formatted_meta_data( '' ) ) {
-           	foreach ( $meta_data as $meta_id => $meta ) {
+        	 $product_name[] = $item['name'];
+         	 $product_id[] = $item['product_id'];
+         	 $product_qnt[]=$item['qty'];
+         	 if ( $meta_data = $item->get_formatted_meta_data( '' ) ) {
+             	foreach ( $meta_data as $meta_id => $meta ) {
                	$product_parent[]=wp_kses_post( force_balance_tags( $meta->display_value ) );
-           	}
-         	}
+             	}
+         	 }
    	   	}
    		  switch ( $column )
     	   {
@@ -29,7 +30,7 @@ class wcOrderItemShowerClass {
             	?>
            		 <div class="container">
                <div class="header" data="<?php echo array_sum($product_qnt); ?>"><span>Expand <span class="qntOrder">( 	<?php echo array_sum($product_qnt); ?> )</span></span></div>
-                	<div class="content">
+                  <div class="content">
                  		<?php
                 			$i=0;
                  			while($i<count($product_name)) {
