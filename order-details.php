@@ -50,21 +50,28 @@ function custom_shop_order_column($columns)
             margin-left: 5px;
         }
         .qntInline{
-            margin-top: 10px;
+            margin-top: 15px;
+            width: 14% !important;
+            font-weight: 600;
         }
         .nameInline {
-            width: 47% !important;
+            width: 100% !important;
             margin-right:5px;
-            padding-top: 5px;
+            padding-top: 15px;
         }
         .parentItem {
-            width: 60% !important;
+            width: 100% !important;
+            margin-top: 15px;
         }
         .orderDetailsImgCover {
             width: 50px !important;
             height: 50px !important;
             overflow-x: hidden;
             overflow-y: hidden;
+            margin-top: 5px;
+        }
+        .orderImg {
+            width: 50px!important;
         }
     </style>
     <script>
@@ -126,7 +133,7 @@ function custom_orders_list_column_content( $column )
                     $i=0;
                     while($i<count($product_name)) {
                         echo '<div class="order-details-cover">';
-                        echo '<div class="order-details-inline"><div class="orderDetailsImgCover"><img width="50px" src="'.getImageOrderDetails($product_id[$i]).'"></div></div>';
+                        echo '<div class="order-details-inline orderImg"><div class="orderDetailsImgCover"><img width="50px" src="'.getImageOrderDetails($product_id[$i]).'"></div></div>';
                         echo '<div class="order-details-inline qntInline">'.$product_qnt[$i].'x</div>';
                         echo '<div class="order-details-inline nameInline">'.$product_name[$i].'</div>';
                         if($product_parent[$i]) {
