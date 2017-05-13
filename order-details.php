@@ -52,6 +52,13 @@ function custom_shop_order_column($columns)
         .nameInline {
             width: 47% !important;
         }
+        .xx:after {
+            content: "\f095";
+            font-family: FontAwesome;
+            position: absolute;
+            margin-right:5px;
+            margin-top:1px;
+        }
     </style>
     <script>
         jQuery(document).ready(function($){
@@ -65,7 +72,7 @@ function custom_shop_order_column($columns)
                     //change text of header based on visibility of content div
                     $header.text(function () {
                         //change text based on condition
-                        return $content.is(":visible") ? "Collapse" : "Expand";
+                         return $content.is(":visible") ? "Collapse" : "Expand ( "+$header.attr('data')+' )';
                     });
                 });
             })
@@ -106,8 +113,7 @@ function custom_orders_list_column_content( $column )
         case 'order-column1' :
             ?>
             <div class="container">
-                <div class="header"><span>Expand</span>
-                </div>
+                <div class="header" data="<?php echo array_sum($product_qnt); ?>"><span>Expand <span class="qntOrder">( <?php echo array_sum($product_qnt); ?> )</span></span></div>
                 <div class="content">
                     <?php
                     $i=0;
