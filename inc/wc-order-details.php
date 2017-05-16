@@ -7,8 +7,8 @@ class wcOrderItemShowerClass {
   function custom_orders_list_column_content($column) {
     global $post, $woocommerce, $the_order;
     $order = new WC_Order($post->ID);
- 	$order_id = trim(str_replace('#', '', $order->get_order_number()));
-	$order = new WC_Order( $order_id );
+ 	//$order_id = trim(str_replace('#', '', $order->get_order_number()));
+	//$order = new WC_Order( $order_id );
    	$items = $order->get_items();
     $product_id=array();
     $product_name=array();
