@@ -4,7 +4,7 @@
  * Plugin URI: http://plife.se
  * Description: It shows order items on order page after woocommerce 3.0.x update
  * Version: 1.1
- * Author: Deniz
+ * Author: M.Sevimli
  * Author URI: http://plife.se
  * License: GPL2
  */
